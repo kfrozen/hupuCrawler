@@ -18,6 +18,7 @@ function start(){
 
 function innerStartForArticles(res) {
     var articleUrls = [],
+        articleTitles = [],
         pageUrls = [],
         pageNum = 5;
 
@@ -33,11 +34,13 @@ function innerStartForArticles(res) {
                 var $ = cheerio.load(pres.text);
 
                 $("div.list").each(function (i, listItem) {
-                    var articleUrl = $(listItem).find("span.n1 > a").text();
+                    var url = $(listItem).find("span.n1 > a").attr('href');
+                    articleUrls.push(url);
 
-                    articleUrls.push(articleUrl);
+                    var title = $(listItem).find("span.n1 > a").text();
+                    articleTitles.push(title);
 
-                    ep.emit('ArticleHtml', articleUrl);
+                    ep.emit('ArticleHtml', url, title);
                 });
             });
     }
@@ -48,7 +51,9 @@ function innerStartForArticles(res) {
         res.write('The article list contains ' + articleUrls.length + ' articles' + '<br/>');
         for(let i = 0; i < articleUrls.length; i++)
         {
-            res.write('Title: ' + articleUrls[i] + '<br/>');
+            // res.write('Title: ' + this.articleTitles[i] + '<br/>');
+            res.write('Link: ' + articleUrls[i] + '<br/>');
+            res.write('<br/>');
         }
         res.end();
     });
