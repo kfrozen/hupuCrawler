@@ -7,6 +7,7 @@
     "async": "^1.5.0",
     "cheerio": "^0.19.0",
     "eventproxy": "^0.3.4",
+    "mongodb": "^2.2.33",
     "superagent": "^1.4.0",
     "superagent-charset": "^1.2.0"
   },
