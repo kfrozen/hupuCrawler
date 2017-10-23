@@ -5,7 +5,8 @@ function Article() {
     this.link = arguments[1];
     this.releaseDate = arguments[2];
     this.image = arguments[3];
-    this.content = arguments[4];
+    this.content = "";
+    this._id = this.link;
 }
 
 Article.obtainProjectCollection = function(callback) {
@@ -21,7 +22,7 @@ Article.obtainProjectCollection = function(callback) {
                 return callback(err);
             }
 
-            callback(null, collection);
+            return callback(null, collection);
         });
     });
 };
