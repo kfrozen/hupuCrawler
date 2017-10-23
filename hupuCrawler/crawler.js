@@ -46,8 +46,8 @@ function innerStartForArticles(res) {
 
                 $("div.list").each(function (i, listItem) {
                     let url = $(listItem).find("span.n1 > a").attr('href');
-                    let title = $(listItem).find("span.n1 > a").text();
-                    let date = $(listItem).find("p.time > a").text();
+                    let title = $(listItem).find("span.n1 > a").text().trim();
+                    let date = $(listItem).find("p.time > a").text().trim();
                     let article = new Article(title, url, date);
 
                     ep.emit('ArticleHtmlFirstRound', article);
@@ -77,7 +77,7 @@ function innerStartForArticles(res) {
                     article.image = $("div.artical-importantPic > img").attr("src");
 
                     $("div.artical-main-content").each(function (i, p) {
-                        article.content += $(p).text();
+                        article.content += $(p).text().trim();
                     });
 
                     ep.emit('ArticleHtmlSecondRound');
