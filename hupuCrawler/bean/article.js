@@ -27,17 +27,4 @@ Article.obtainProjectCollection = function(callback) {
     });
 };
 
-Article.prototype.save = function(collection) {
-    var article = {
-        _id: this.link,
-        link: this.link,
-        title: this.title,
-        content: this.content,
-        releaseDate: this.releaseDate,
-        image: this.image
-    };
-
-    collection.save(article);
-};
-
 module.exports = Article;
