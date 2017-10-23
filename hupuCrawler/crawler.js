@@ -18,10 +18,12 @@ function start(){
             return;
         }
 
+        console.log('Start working...');
+
         innerStartForArticles(res);
     };
     
-    http.createServer(onRequest).listen(3000);
+    http.createServer(onRequest).listen(4000);
 }
 
 function innerStartForArticles(res) {
