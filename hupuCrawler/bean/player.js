@@ -7,6 +7,7 @@ function Player() {
     this.nationality = arguments[3];
     this.age = arguments[4];
     this.link = arguments[5];
+    this._id = this.name + "_" + this.jersey;
 }
 
 Player.obtainProjectCollection = function(callback) {
