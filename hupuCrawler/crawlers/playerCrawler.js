@@ -89,6 +89,9 @@ function innerStartForPlayers() {
             });
 
             ep.emit('PlayerHtmlFirstRound', players);
+        },
+        function (err) {
+            console.log(err.message);
         });
 
     ep.on('PlayerHtmlFirstRound' ,function(players){
