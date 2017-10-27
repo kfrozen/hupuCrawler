@@ -8,6 +8,7 @@ function Player() {
     this.age = arguments[4];
     this.link = arguments[5];
     this._id = this.name + "_" + this.jersey;
+    this._section = generateSortSection(this.position);
 }
 
 Player.obtainProjectCollection = function(callback) {
@@ -27,6 +28,23 @@ Player.obtainProjectCollection = function(callback) {
         });
     });
 };
+
+function generateSortSection(position) {
+    if(position == "门将"){
+        return 1;
+    }
+    else if(position == "后卫"){
+        return 2;
+    }
+    else if(position == "中场"){
+        return 3;
+    }
+    else if(position == "前锋"){
+        return 4;
+    }
+
+    return 5;
+}
 
 function fixPlayerJersey(name, orgJersey){
     if(name == "Mario Götze"){
