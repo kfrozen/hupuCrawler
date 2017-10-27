@@ -30,28 +30,28 @@ Player.obtainProjectCollection = function(callback) {
 
 function fixPlayerJersey(name, orgJersey){
     if(name == "Mario Götze"){
-        return "10";
+        return 10;
     }
     else if(name == "André Schürrle"){
-        return "21";
+        return 21;
     }
     else if(name == "Marc Bartra"){
-        return "5";
+        return 5;
     }
     else if(name == "Neven Subotic"){
-        return "4";
+        return 4;
     }
     else if(name == "Sebastian Rode"){
-        return "18";
+        return 18;
     }
     else if(name == "Dzenis Burnic"){
-        return "31";
+        return 31;
     }
     else if(name == "Maximilian Philipp"){
-        return "20";
+        return 20;
     }
 
-    return orgJersey;
+    return parseInt(orgJersey);
 }
 
 module.exports = Player;
