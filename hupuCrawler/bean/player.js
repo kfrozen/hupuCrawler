@@ -5,8 +5,8 @@ function Player() {
     this.jersey = fixPlayerJersey(this.name, arguments[1]);
     this.position = arguments[2];
     this.nationality = arguments[3];
-    this.age = arguments[4];
-    this.link = arguments[5];
+    this.link = arguments[4];
+    this.age = arguments[5];
     this._id = this.name + "_" + this.jersey;
     this._section = generateSortSection(this.position);
 }
@@ -27,6 +27,12 @@ Player.obtainProjectCollection = function(callback) {
             return callback(null, collection);
         });
     });
+};
+
+Player.prototype.mergeDetailInfo = function () {
+    this.image = arguments[0];
+    this.height = arguments[1];
+    this.weight = arguments[2];
 };
 
 function generateSortSection(position) {

@@ -25,7 +25,13 @@ function innerStartForArticles(res) {
         superagent
             .get(pageUrl)
             .charset('utf-8')
-            .then(function(pres){
+            .end(function(err, pres){
+                if(err){
+                    console.log(err.message);
+
+                    return;
+                }
+
                 var $ = cheerio.load(pres.text);
 
                 $("div.list").each(function (i, listItem) {
@@ -55,7 +61,13 @@ function innerStartForArticles(res) {
             superagent
                 .get(article.link)
                 .charset('utf-8')
-                .then(function(pres){
+                .end(function(err, pres){
+                    if(err){
+                        console.log(err.message);
+
+                        return;
+                    }
+
                     let $ = cheerio.load(pres.text);
 
                     article.image = $("div.artical-importantPic > img").attr("src");

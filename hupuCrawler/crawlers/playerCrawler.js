@@ -11,6 +11,8 @@ var http = require("http"),
 var invalidPlayers = ["Sven Bender", "Ousmane Dembélé", "Emre Mor", "Mikel Merino",
                     "Matthias Ginter", "Felix Passlack"];
 
+var ep = new eventproxy();
+
 function isValidPlayer(name) {
     var isValid = true;
 
@@ -25,14 +27,18 @@ function isValidPlayer(name) {
 
 function innerStartForPlayers() {
     var pageUrl = "https://soccer.hupu.com/teams/373";
-
-    var ep = new eventproxy();
     var players = [];
 
     superagent
         .get(pageUrl)
         .charset('utf-8')
-        .then(function(pres){
+        .end(function(err, pres){
+            if(err){
+                console.log(err.message);
+
+                return;
+            }
+
             var $ = cheerio.load(pres.text);
 
             $("table.team_player").each(function (i, tableItem) {
@@ -82,31 +88,72 @@ function innerStartForPlayers() {
                         });
 
                         if(isValidPlayer(name) == true){
-                            players.push(new Player(name, jersey, position, nationality, age, link));
+                            players.push(new Player(name, jersey, position, nationality, link, age));
                         }
                     }
                 });
             });
 
             ep.emit('PlayerHtmlFirstRound', players);
-        },
-        function (err) {
-            console.log(err.message);
         });
 
     ep.on('PlayerHtmlFirstRound' ,function(players){
-        Player.obtainProjectCollectionAsync()
-            .then(function(collection){
-                collection.remove({});
 
-                collection.insertMany(players);
+        ep.after("PlayerDetailInfoLoaded", players.length, function (playerList) {
+            Player.obtainProjectCollectionAsync()
+                .then(function(collection){
+                    collection.remove({});
 
-                mongodb.close(true);
-            })
-            .catch(function (err) {
-                mongodb.close(true);
-            })
+                    collection.insertMany(playerList);
+
+                    mongodb.close(true);
+                })
+                .catch(function (err) {
+                    mongodb.close(true);
+                });
+        });
+
+        players.forEach(function (player) {
+            fetchPlayerDetailInfo(player);
+        });
     });
+}
+
+function fetchPlayerDetailInfo(player) {
+    superagent
+        .get(player.link)
+        .charset('utf-8')
+        .end(function(err, pres){
+            if(err){
+                console.log(err.message);
+
+                return;
+            }
+
+            var $ = cheerio.load(pres.text);
+            var image = "";
+            var height = "";
+            var weight = "";
+
+            $('ul.player_detail').children('li').each(function (i, item) {
+
+                if(i == 0) {
+                    image = $(item).find('img').attr('src');
+                }
+                else if(i == 1) {
+                    let spans = $(item).children('span');
+                    weight = $(spans[2]).text();
+                }
+                else if(i == 2) {
+                    let spans = $(item).children('span');
+                    height = $(spans[0]).text();
+                }
+            });
+
+            player.mergeDetailInfo(image, height, weight);
+
+            ep.emit("PlayerDetailInfoLoaded", player);
+        });
 }
 
 exports.innerStartForPlayers = innerStartForPlayers;
