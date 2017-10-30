@@ -14,7 +14,7 @@ function start(){
         playerCrawler.innerStartForPlayers();
 
         articleCrawler.innerStartForArticles(res);
-    };
+    }
     
     http.createServer(onRequest).listen(4000);
 }

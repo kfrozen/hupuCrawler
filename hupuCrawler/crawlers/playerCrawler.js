@@ -6,7 +6,7 @@ var http = require("http"),
     Promise = require('bluebird'),
     eventproxy = require('eventproxy'),
     Player = Promise.promisifyAll(require('../bean/player')),
-    mongodb = require('../database/db');
+    DatabaseUtil = require('../database/db');
 
 var invalidPlayers = ["Sven Bender", "Ousmane Dembélé", "Emre Mor", "Mikel Merino",
                     "Matthias Ginter", "Felix Passlack"];
@@ -97,20 +97,11 @@ function innerStartForPlayers() {
             ep.emit('PlayerHtmlFirstRound', players);
         });
 
-    ep.on('PlayerHtmlFirstRound' ,function(players){
+    ep.once('PlayerHtmlFirstRound' ,function(players){
 
         ep.after("PlayerDetailInfoLoaded", players.length, function (playerList) {
-            Player.obtainProjectCollectionAsync()
-                .then(function(collection){
-                    collection.remove({});
 
-                    collection.insertMany(playerList);
-
-                    mongodb.close(true);
-                })
-                .catch(function (err) {
-                    mongodb.close(true);
-                });
+            DatabaseUtil.updateCollectionData("Players", playerList);
         });
 
         players.forEach(function (player) {

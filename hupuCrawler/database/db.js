@@ -1,6 +1,29 @@
-var config = require('./mongo_config'),
-    Db = require('mongodb').Db,
-    Server = require('mongodb').Server;
+var MongoClient = require('mongodb').MongoClient;
+var url = 'mongodb://localhost:27017/HupuCrawlerDB';
 
-module.exports = new Db(config.db, new Server(config.host, config.port),
-    {safe: true});
+function DatabaseUtil() {
+
+}
+
+DatabaseUtil.updateCollectionData = function (collectionName, dataList) {
+    MongoClient.connect(url, function(err, db) {
+        if(!err){
+            var collection = db.collection(collectionName);
+
+            collection.deleteMany({})
+                .then(function (r) {
+                    return collection.insertMany(dataList);
+                })
+                .then(function (r) {
+                    return db.close();
+                })
+                .catch(function (err) {
+                    console.log(err.message);
+
+                    db.close();
+                })
+        }
+    });
+};
+
+module.exports = DatabaseUtil;

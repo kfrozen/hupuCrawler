@@ -9,22 +9,4 @@ function Article() {
     this._id = this.link;
 }
 
-Article.obtainProjectCollection = function(callback) {
-    mongodb.open(function (err, db) {
-        if (err) {
-            return callback(err);
-        }
-
-        db.collection('Articles', function (err, collection) {
-            if (err) {
-                mongodb.close(true);
-
-                return callback(err);
-            }
-
-            return callback(null, collection);
-        });
-    });
-};
-
 module.exports = Article;

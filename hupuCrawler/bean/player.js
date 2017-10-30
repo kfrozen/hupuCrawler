@@ -11,24 +11,6 @@ function Player() {
     this._section = generateSortSection(this.position);
 }
 
-Player.obtainProjectCollection = function(callback) {
-    mongodb.open(function (err, db) {
-        if (err) {
-            return callback(err);
-        }
-
-        db.collection('Players', function (err, collection) {
-            if (err) {
-                mongodb.close(true);
-
-                return callback(err);
-            }
-
-            return callback(null, collection);
-        });
-    });
-};
-
 Player.prototype.mergeDetailInfo = function () {
     this.image = arguments[0];
     this.height = arguments[1];
@@ -55,6 +37,9 @@ function generateSortSection(position) {
 function fixPlayerJersey(name, orgJersey){
     if(name == "Mario Götze"){
         return 10;
+    }
+    else if(name == "Mahmoud Dahoud"){
+        return 19;
     }
     else if(name == "André Schürrle"){
         return 21;

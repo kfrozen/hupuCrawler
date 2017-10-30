@@ -6,7 +6,7 @@ var http = require("http"),
     Promise = require('bluebird'),
     eventproxy = require('eventproxy'),
     Article = Promise.promisifyAll(require('../bean/article')),
-    mongodb = require('../database/db');
+    DatabaseUtil = require('../database/db');
 
 function innerStartForArticles(res) {
     var pageUrls = [],
@@ -84,19 +84,7 @@ function innerStartForArticles(res) {
     });
 
     ep.after('ArticleHtmlSecondRound', pageUrls.length * 30 ,function(){
-        Article.obtainProjectCollectionAsync()
-            .then(function(collection){
-                collection.remove({});
-
-                collection.insertMany(loadedArticleList);
-
-                mongodb.close(true);
-            })
-            .catch(function (err) {
-                mongodb.close(true);
-
-                res.end(err.message);
-            })
+        DatabaseUtil.updateCollectionData("Articles", loadedArticleList);
     });
 }
 
