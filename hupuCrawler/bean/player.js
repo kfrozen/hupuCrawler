@@ -1,15 +1,36 @@
-var mongodb = require('../database/db');
+function Player(name, jersey) {
+    this.name = name;
 
-function Player() {
-    this.name = arguments[0];
-    this.jersey = fixPlayerJersey(this.name, arguments[1]);
-    this.position = arguments[2];
-    this.nationality = arguments[3];
-    this.link = arguments[4];
-    this.age = arguments[5];
+    this.jersey = fixPlayerJersey(this.name, jersey);
+
     this._id = this.name + "_" + this.jersey;
-    this._section = generateSortSection(this.position);
 }
+
+Player.prototype.pPosition = function (position) {
+    this.position = position;
+
+    this._section = generateSortSection(this.position);
+
+    return this;
+};
+
+Player.prototype.pNationality = function (nationality) {
+    this.nationality = nationality;
+
+    return this;
+};
+
+Player.prototype.pLink = function (link) {
+    this.link = link;
+
+    return this;
+};
+
+Player.prototype.pAge = function (age) {
+    this.age = age;
+
+    return this;
+};
 
 Player.prototype.mergeDetailInfo = function () {
     this.image = arguments[0];

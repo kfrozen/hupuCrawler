@@ -88,7 +88,13 @@ function innerStartForPlayers() {
                         });
 
                         if(isValidPlayer(name) == true){
-                            players.push(new Player(name, jersey, position, nationality, link, age));
+                            var player = (new Player(name, jersey))
+                                .pPosition(position)
+                                .pNationality(nationality)
+                                .pLink(link)
+                                .pAge(age);
+
+                            players.push(player);
                         }
                     }
                 });

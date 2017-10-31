@@ -38,7 +38,7 @@ function innerStartForArticles(res) {
                     let url = $(listItem).find("span.n1 > a").attr('href');
                     let title = $(listItem).find("span.n1 > a").text().trim();
                     let date = $(listItem).find("p.time > a").text().trim();
-                    let article = new Article(title, url, date);
+                    let article = (new Article(title, url)).aReleaseDate(date);
 
                     ep.emit('ArticleHtmlFirstRound', article);
                 });
@@ -70,11 +70,15 @@ function innerStartForArticles(res) {
 
                     let $ = cheerio.load(pres.text);
 
-                    article.image = $("div.artical-importantPic > img").attr("src");
+                    article.aImage($("div.artical-importantPic > img").attr("src"));
+
+                    var content = "";
 
                     $("div.artical-main-content").each(function (i, p) {
-                        article.content += $(p).text().trim();
+                        content += $(p).text().trim();
                     });
+
+                    article.aContent(content);
 
                     ep.emit('ArticleHtmlSecondRound');
                 });

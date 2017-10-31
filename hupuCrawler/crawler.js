@@ -1,6 +1,7 @@
 var http = require("http"),
     articleCrawler = require("./crawlers/articleCrawler"),
-    playerCrawler = require("./crawlers/playerCrawler");
+    playerCrawler = require("./crawlers/playerCrawler"),
+    rankCrawler = require("./crawlers/rankCrawler");
 
 function start(){
     function onRequest(req, res){
@@ -12,6 +13,8 @@ function start(){
         console.log('Start working...');
 
         playerCrawler.innerStartForPlayers();
+
+        rankCrawler.innerStartForRanks();
 
         articleCrawler.innerStartForArticles(res);
     }
