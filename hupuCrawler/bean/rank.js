@@ -1,5 +1,5 @@
 function Rank(rank) {
-    this._id = rank;
+    this._id = parseInt(rank);
 }
 
 Rank.prototype.teamName = function (team) {
@@ -28,6 +28,18 @@ Rank.prototype.tiedGames = function (tied) {
 
 Rank.prototype.lostGames = function (lost) {
     this.lost = lost;
+
+    return this;
+};
+
+Rank.prototype.rGoals = function (goal) {
+    this.goal = goal;
+
+    return this;
+};
+
+Rank.prototype.rFumbles = function (fumble) {
+    this.fumble = fumble;
 
     return this;
 };

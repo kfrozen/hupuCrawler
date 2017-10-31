@@ -59,6 +59,16 @@ function innerStartForRanks() {
 
                             break;
 
+                        case 7:
+                            rank = rank.rGoals(attribute.text().trim());
+
+                            break;
+
+                        case 8:
+                            rank = rank.rFumbles(attribute.text().trim());
+
+                            break;
+
                         case 9:
                             rank = rank.goalDifference(attribute.text().trim());
 
