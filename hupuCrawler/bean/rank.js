@@ -8,6 +8,18 @@ Rank.prototype.teamName = function (team) {
     return this;
 };
 
+Rank.prototype.rLink = function (link) {
+    this.link = link;
+
+    return this;
+};
+
+Rank.prototype.rLogo = function (logo) {
+    this.logo = logo;
+
+    return this;
+};
+
 Rank.prototype.totalGames = function (total) {
     this.total = total;
 

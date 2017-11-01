@@ -2,6 +2,7 @@ var http = require("http"),
     request = require('superagent'),
     superagent = require('superagent-charset')(request),
     cheerio = require("cheerio"),
+    eventproxy = require('eventproxy'),
     Promise = require('bluebird'),
     Rank = Promise.promisifyAll(require('../bean/rank')),
     DatabaseUtil = require('../database/db');
@@ -14,7 +15,7 @@ function innerStartForRanks() {
         .get(pageUrl)
         .charset('utf-8')
         .end(function(err, pres){
-            if(err) {
+            if(err){
                 console.log(err.message);
 
                 return;
@@ -35,7 +36,8 @@ function innerStartForRanks() {
                             break;
 
                         case 2:
-                            rank = rank.teamName(attribute.find("a").text().trim());
+                            rank = rank.teamName(attribute.find("a").text().trim())
+                                       .rLink(attribute.find("a").attr("href"));
 
                             break;
 
@@ -86,8 +88,35 @@ function innerStartForRanks() {
                 }
             });
 
-            DatabaseUtil.updateCollectionData("Ranks", ranks);
+            fetchTeamLogo(ranks);
         });
+}
+
+function fetchTeamLogo(ranks){
+    var ep = new eventproxy();
+
+    ep.after("TeamLogoTaskDone", ranks.length, function (result) {
+        DatabaseUtil.updateCollectionData("Ranks", result);
+    });
+
+    ranks.forEach(function (rank) {
+        superagent.get(rank.link)
+            .charset('utf-8')
+            .end(function(err, pres) {
+                if (err) {
+                    console.log(err.message);
+
+                    return;
+                }
+
+                let $ = cheerio.load(pres.text);
+                let logoUrl = $("div.main").find("div.left > div.team_info > ul > li.pic_logo > img").attr("src");
+
+                rank.rLogo(logoUrl.replace(/.jpg/, ".png"));
+
+                ep.emit("TeamLogoTaskDone", rank);
+            });
+    })
 }
 
 exports.innerStartForRanks = innerStartForRanks;
